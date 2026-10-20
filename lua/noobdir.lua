@@ -25,7 +25,6 @@ end
 NoobDir.open = function()
   local _explorer = NoobDir.config.explorer
   local absolute_path = vim.api.nvim_buf_get_name(0)
-  _explorer.buf_id = vim.api.nvim_get_current_buf()
 
   if not _explorer.is_open then
     --- Handle netrw events using callbacks
@@ -37,8 +36,10 @@ NoobDir.open = function()
       end
     })
     vim.cmd('vnew ' .. absolute_path .. ' | Ex | vertical resize ' .. _explorer.width)
-  elseif _explorer.buf_id == vim.api.nvim_get_current_buf() then
+    _explorer.buf_id = vim.api.nvim_get_current_buf()
+  else
     --- delete buffer for netrw
+
     vim.cmd('bd ' .. _explorer.buf_id)
     _explorer.buf_id = -1
   end
