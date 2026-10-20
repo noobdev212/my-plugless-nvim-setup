@@ -17,7 +17,8 @@ NoobDir.setup = function(config)
       explorer = {
 	width     = math.floor(vim.api.nvim_win_get_width(0)/3),
 	is_open   = false,
-	buf_id    = -1 -- file explorer buffer
+	buf_id    = -1, -- file explorer buffer
+	prev_id   = -1 -- previous buffer when explorer was open
       }
     }
   end
@@ -26,6 +27,7 @@ end
 NoobDir.open = function()
   local _explorer = NoobDir.config.explorer
   local absolute_path = vim.api.nvim_buf_get_name(0)
+  _explorer.prev_id = vim.api.nvim_get_current_buf()
 
   if not _explorer.is_open then
     --- handle netrw events using callbacks
@@ -35,7 +37,7 @@ NoobDir.open = function()
   else
     --- delete buffer for netrw 
     if vim.api.nvim_buf_is_valid(_explorer.buf_id) then
-      vim.cmd('b ' .. _explorer.buf_id .. ' | bd ' .. _explorer.buf_id)
+      vim.cmd('b ' .. _explorer.prev_id .. ' | bd ' .. _explorer.buf_id)
     end
     _explorer.buf_id = -1
   end
@@ -71,7 +73,8 @@ NoobDir.read = function()
       	vim.cmd("e " .. filepath)
       else
       	vim.print('Opening file ' .. filepath)
-	if vim.api.nvim_buf_is_valid(_explorer.buf_id) then
+	if vim.api.nvim_buf_is_valid(_explorer.prev_id) then
+	  _explorer.prev_id = vim.api.nvim_get_current_buf()
 	  local escape_keys = vim.api.nvim_replace_termcodes('<C-w>w', true, false, true)
   	  vim.api.nvim_feedkeys(escape_keys, 'm', false)
 	end
