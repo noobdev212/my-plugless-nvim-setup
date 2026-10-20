@@ -29,13 +29,7 @@ NoobDir.open = function()
 
   if not _explorer.is_open then
     --- handle netrw events using callbacks
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern  = 'netrw',
-      callback = function()
-	vim.cmd.stopinsert()
-	NoobDir.read()
-      end
-    })
+    NoobDir.mapping()
     vim.cmd('vnew ' .. absolute_path .. ' | Ex | vertical resize ' .. _explorer.width)
     _explorer.buf_id = vim.api.nvim_get_current_buf()
   else
@@ -47,6 +41,17 @@ NoobDir.open = function()
   end
 
   _explorer.is_open = !_explorer.is_open
+end
+
+NoobDir.mapping = function()
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern  = 'netrw',
+    callback = function()
+      vim.keymap.set({'n', 'i'}, 'f', '%', { remap = true, buffer = true })
+      vim.cmd.stopinsert()
+      NoobDir.read()
+    end
+  })
 end
 
 NoobDir.read = function()
