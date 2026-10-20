@@ -1,6 +1,7 @@
 local NoobDir = {}
 
-NoobDir.setup = function(config) _G.NoobDir = NoobDir
+NoobDir.setup = function(config) 
+  _G.NoobDir = NoobDir
 
   vim.g.netrw_browse_split = 0
   vim.g.netrw_banner = 0
@@ -27,7 +28,7 @@ NoobDir.open = function()
   local absolute_path = vim.api.nvim_buf_get_name(0)
 
   if not _explorer.is_open then
-    --- Handle netrw events using callbacks
+    --- handle netrw events using callbacks
     vim.api.nvim_create_autocmd('FileType', {
       pattern  = 'netrw',
       callback = function()
@@ -38,9 +39,10 @@ NoobDir.open = function()
     vim.cmd('vnew ' .. absolute_path .. ' | Ex | vertical resize ' .. _explorer.width)
     _explorer.buf_id = vim.api.nvim_get_current_buf()
   else
-    --- delete buffer for netrw
-
-    vim.cmd('bd ' .. _explorer.buf_id)
+    --- delete buffer for netrw 
+    if vim.api.nvim_buf_is_valid(_explorer.buf_id) then
+      vim.cmd('b ' .. _explorer.buf_id .. ' | bd ' .. _explorer.buf_id)
+    end
     _explorer.buf_id = -1
   end
 
