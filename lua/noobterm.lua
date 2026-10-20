@@ -15,6 +15,7 @@ NoobTerm.setup = function(config)
 end
 
 NoobTerm.toggle = function()
+  local directory = vim.fn.expand('%:h')
   vim.cmd('tabnew | terminal') 
   NoobTerm.config.tab_id = vim.api.nvim_get_current_buf()
   --- wait for terminal to open
@@ -22,6 +23,7 @@ NoobTerm.toggle = function()
     --- change to insert mode to
     --- continuously input to cmd
     vim.cmd('startinsert')
+    vim.api.nvim_input('cd ' .. directory .. ' <CR>')
     NoobTerm.input()
   end)
 end
