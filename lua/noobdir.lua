@@ -15,7 +15,7 @@ NoobDir.setup = function(config)
 	width     = vim.api.nvim_win_get_width(0)
       },
       explorer = {
-	width     = math.floor(vim.api.nvim_win_get_width(0)/3),
+	width     = math.floor(vim.api.nvim_win_get_width(0)/4),
 	is_open   = false,
 	buf_id    = -1, -- file explorer buffer
 	prev_id   = -1 -- previous buffer when explorer was open
@@ -31,13 +31,13 @@ NoobDir.open = function()
 
   if not _explorer.is_open then
     --- handle netrw events using callbacks
-    NoobDir.mapping()
+    NoobDir.mapping(_explorer.prev_id)
     vim.cmd('vnew ' .. absolute_path .. ' | Ex | vertical resize ' .. _explorer.width)
     _explorer.buf_id = vim.api.nvim_get_current_buf()
   else
     --- delete buffer for netrw 
     if vim.api.nvim_buf_is_valid(_explorer.buf_id) then
-      vim.cmd('b ' .. _explorer.prev_id .. ' | bd ' .. _explorer.buf_id)
+      vim.cmd('b ' .. _explorer.prev_id .. ' | bw ' .. _explorer.buf_id)
     end
     _explorer.buf_id = -1
   end
@@ -49,9 +49,18 @@ NoobDir.mapping = function()
   vim.api.nvim_create_autocmd('FileType', {
     pattern  = 'netrw',
     callback = function()
-      vim.keymap.set({'n', 'i'}, 'f', '%', { remap = true, buffer = true })
       vim.cmd.stopinsert()
       NoobDir.read()
+      --- replace netrw-% with keymap f
+      vim.keymap.set({'n', 'i'}, 'f', function() 
+	vim.ui.input(
+	  { prompt = 'Create new file: ' },
+	  function(input)
+	    NoobDir.open()
+	    vim.cmd('e %:p:h/' .. input)
+	  end
+	)
+      end, { noremap = true, buffer = true })
     end
   })
 end
@@ -70,18 +79,18 @@ NoobDir.read = function()
 
       if status.type == 'directory' then
       	vim.print('Opening directory ' .. filepath)
-      	vim.cmd("e " .. filepath)
+      	vim.cmd('e ' .. filepath)
       else
       	vim.print('Opening file ' .. filepath)
-	if vim.api.nvim_buf_is_valid(_explorer.prev_id) then
-	  _explorer.prev_id = vim.api.nvim_get_current_buf()
+	if vim.api.nvim_buf_is_valid(buf_id) then
 	  local escape_keys = vim.api.nvim_replace_termcodes('<C-w>w', true, false, true)
   	  vim.api.nvim_feedkeys(escape_keys, 'm', false)
+	  _explorer.prev_id = vim.api.nvim_get_current_buf()
 	end
 
 	--- await for feedkeys to finish if valid buf id
 	vim.schedule(function()
-	  vim.cmd("e " .. filepath)
+	  vim.cmd('e ' .. filepath)
 	end)
       end
     else
