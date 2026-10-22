@@ -5,3 +5,4 @@ NoobDir.setup({})
 NoobTerm.setup({})
 
 require('keymaps')
+require('options')
