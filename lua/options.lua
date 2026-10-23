@@ -8,9 +8,13 @@ vim.opt.linebreak      = true --- prevents text splitting when word is wrapped
 vim.opt.list           = true --- adds a character for leading space
 vim.opt.listchars      = {
   trail   = '᠉',
-  extends = '∇'
+  extends = '∇',
+
 }
 vim.opt.showbreak      = '↳' --- insert when line breaks occurs during wrapping
+vim.opt.fillchars      = {
+  eob = ' ' --- remove tilde for empty lines
+}
 
 vim.opt.inccommand     = 'split' --- display words impacted by %s
 vim.opt.splitbelow     = true
