@@ -9,7 +9,7 @@ vim.opt.list           = true --- adds a character for leading space
 vim.opt.listchars      = {
   trail   = '᠉',
   extends = '∇',
-
+  tab     = '  '
 }
 vim.opt.showbreak      = '↳' --- insert when line breaks occurs during wrapping
 vim.opt.fillchars      = {
