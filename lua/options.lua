@@ -34,4 +34,4 @@ vim.opt.scrolloff      = 9999 --- drag the screen view during scrolling to curso
 vim.opt.signcolumn     = 'yes'
 vim.o.cmdheight        = 0
 vim.opt.termguicolors  = true
-vim.opt.clipboard:append('unnamedplus')
+vim.opt.clipboard      = 'unnamedplus'
