@@ -12,13 +12,13 @@ NoobDir.setup = function(config)
   else
     NoobDir.config = {
       max_size = {
-	width     = vim.api.nvim_win_get_width(0)
+        width     = vim.api.nvim_win_get_width(0)
       },
       explorer = {
-	width     = math.floor(vim.api.nvim_win_get_width(0)/4),
-	is_open   = false,
-	buf_id    = -1, -- file explorer buffer
-	prev_id   = -1 -- previous buffer when explorer was open
+        width     = math.floor(vim.api.nvim_win_get_width(0)/4),
+        is_open   = false,
+        buf_id    = -1, -- file explorer buffer
+        prev_id   = -1 -- previous buffer when explorer was open
       }
     }
   end
@@ -31,6 +31,7 @@ NoobDir.open = function()
 
   if not _explorer.is_open then
     --- handle netrw events using callbacks
+    vim.cmd.stopinsert()
     NoobDir.mapping(_explorer.prev_id)
     vim.cmd('vnew ' .. absolute_path .. ' | Ex | vertical resize ' .. _explorer.width)
     _explorer.buf_id = vim.api.nvim_get_current_buf()
@@ -49,17 +50,17 @@ NoobDir.mapping = function()
   vim.api.nvim_create_autocmd('FileType', {
     pattern  = 'netrw',
     callback = function()
-      vim.cmd.stopinsert()
       NoobDir.read()
       --- replace netrw-% with keymap f
-      vim.keymap.set({'n', 'i'}, 'f', function() 
-	vim.ui.input(
-	  { prompt = 'Create new file: ' },
-	  function(input)
-	    NoobDir.open()
-	    vim.cmd('e %:p:h/' .. input)
-	  end
-	)
+      vim.keymap.set('n', 'f', function() 
+        local cwd = vim.fn.expand('%:p:h/')
+        vim.ui.input(
+          { prompt = 'Create new file: ' },
+          function(input)
+            NoobDir.open()
+            vim.cmd('e ' .. vim.fn.fnameescape(cwd .. '/' .. input))
+          end
+      )
       end, { noremap = true, buffer = true })
     end
   })
@@ -71,7 +72,6 @@ NoobDir.read = function()
     local filepath  = vim.fn['netrw#Call']('NetrwFile', vim.fn['netrw#Call']('NetrwGetWord'))
     local _explorer = NoobDir.config.explorer
     local status    = vim.uv.fs_stat(filepath)
-    
     --- check if it exist
     if status then
       --- open filepath if a file into prev buffer
@@ -82,16 +82,17 @@ NoobDir.read = function()
       	vim.cmd('e ' .. filepath)
       else
       	vim.print('Opening file ' .. filepath)
-	if vim.api.nvim_buf_is_valid(buf_id) then
-	  local escape_keys = vim.api.nvim_replace_termcodes('<C-w>w', true, false, true)
-  	  vim.api.nvim_feedkeys(escape_keys, 'm', false)
-	  _explorer.prev_id = vim.api.nvim_get_current_buf()
-	end
 
-	--- await for feedkeys to finish if valid buf id
-	vim.schedule(function()
-	  vim.cmd('e ' .. filepath)
-	end)
+        if vim.api.nvim_buf_is_valid(buf_id) then
+          local escape_keys = vim.api.nvim_replace_termcodes('<C-w>w', true, false, true)
+            vim.api.nvim_feedkeys(escape_keys, 'm', false)
+          _explorer.prev_id = vim.api.nvim_get_current_buf()
+        end
+
+        --- await for feedkeys to finish if valid buf id
+        vim.schedule(function()
+          vim.cmd('e ' .. vim.fn.fnameescape(filepath))
+        end)
       end
     else
       vim.print("Path doesn't exist " .. filepath)
