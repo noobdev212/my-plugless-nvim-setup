@@ -6,7 +6,7 @@ local palette = {
       red            = "#ff3d00",
       orange         = "#e58e44",
       green          = "#77b886",
-      yellow         = "#f7cb92", 
+      yellow         = "#f7cb92",
       blue           = "#7689d9",
       magenta        = "#8f509d",
       cyan           = "#8fb9f4",
@@ -51,7 +51,10 @@ local palette = {
       cursor     = "#f5a97f",
       visual     = "#2e3c55",
       search     = "#f5c2e7",
-      statusline = "#1e293b",
+      statusline = {
+        fg = "#ffffff",
+        bg = "#00008b",
+      },
       menu_bg    = "#1a2535",
       menu_sel   = "#3b4252",
       fold       = "#3e4a5a",
@@ -74,96 +77,83 @@ NoobColor.groups = function(scheme)
   end
 
   return {
-    Normal       = { fg = palette.element[scheme].fg, bg = palette.element[scheme].bg },
-    NormalFloat  = { fg = palette.element[scheme].fg, bg = palette.ui[scheme].menu_bg },
-
-    Comment      = { fg = palette.element[scheme].comment, italic = true },
-
-    Keyword      = { fg = palette.syntax[scheme].keyword, bold = true },
-    Statement    = { fg = palette.syntax[scheme].keyword, bold = true },
-    Conditional  = { fg = palette.syntax[scheme].keyword, bold = true },
-    Repeat       = { fg = palette.syntax[scheme].keyword, bold = true },
-
-    Function     = { fg = palette.syntax[scheme].Function },
-    Identifier   = { fg = palette.syntax[scheme].variable },
-
-    Type         = { fg = palette.syntax[scheme].type },
-    StorageClass = { fg = palette.syntax[scheme].type },
-    Structure    = { fg = palette.syntax[scheme].type },
-
-    String       = { fg = palette.syntax[scheme].string },
-    Character    = { fg = palette.syntax[scheme].string },
-
-    Number       = { fg = palette.syntax[scheme].number },
-    Float        = { fg = palette.syntax[scheme].number },
-
-    Boolean      = { fg = palette.syntax[scheme].boolean, bold = true },
-
-    Constant     = { fg = palette.syntax[scheme].constant },
-
-    Operator     = { fg = palette.syntax[scheme].operator },
-
-    CursorLine   = { bg = palette.element[scheme].cursorline },
-    CursorLineNr = { fg = palette.color[scheme].bright_yellow, bold = true },
-
-    LineNr       = { fg = palette.element[scheme].linenr },
-
-    Visual       = { bg = palette.ui[scheme].visual },
-
-    Search       = {
-      fg = palette.color[scheme].black,
-      bg = palette.ui[scheme].search,
-    },
-
+    -- Normal       = { fg = palette.element[scheme].fg, bg = palette.element[scheme].bg },
+    -- NormalFloat  = { fg = palette.element[scheme].fg, bg = palette.ui[scheme].menu_bg },
+    -- Comment      = { fg = palette.element[scheme].comment, italic = true },
+    -- Keyword      = { fg = palette.syntax[scheme].keyword, bold = true },
+    -- Statement    = { fg = palette.syntax[scheme].keyword, bold = true },
+    -- Conditional  = { fg = palette.syntax[scheme].keyword, bold = true },
+    -- Repeat       = { fg = palette.syntax[scheme].keyword, bold = true },
+    -- Function     = { fg = palette.syntax[scheme].Function },
+    -- Identifier   = { fg = palette.syntax[scheme].variable },
+    -- Type         = { fg = palette.syntax[scheme].type },
+    -- StorageClass = { fg = palette.syntax[scheme].type },
+    -- Structure    = { fg = palette.syntax[scheme].type },
+    -- String       = { fg = palette.syntax[scheme].string },
+    -- Character    = { fg = palette.syntax[scheme].string },
+    -- Number       = { fg = palette.syntax[scheme].number },
+    -- Float        = { fg = palette.syntax[scheme].number },
+    -- Boolean      = { fg = palette.syntax[scheme].boolean, bold = true },
+    -- Constant     = { fg = palette.syntax[scheme].constant },
+    -- Operator     = { fg = palette.syntax[scheme].operator },
+    -- CursorLine   = { bg = palette.element[scheme].cursorline },
+    -- CursorLineNr = { fg = palette.color[scheme].bright_yellow, bold = true },
+    -- LineNr       = { fg = palette.element[scheme].linenr },
+    -- Visual       = { bg = palette.ui[scheme].visual },
+    -- Search       = {
+    --   fg = palette.color[scheme].black,
+    --   bg = palette.ui[scheme].search,
+    -- },
     StatusLine = {
-      fg = palette.element[scheme].fg,
-      bg = palette.ui[scheme].statusline,
+      fg   = palette.ui[scheme].statusline.fg,
+      bg   = palette.ui[scheme].statusline.bg,
+      bold = true
     },
-
-    VertSplit = {
-      fg = palette.ui[scheme].split,
+    StatusLineNC = {
+      fg = palette.ui[scheme].statusline.fg,
+      bg = palette.ui[scheme].statusline.bg,
     },
-
-    Folded = {
-      fg = palette.element[scheme].comment,
-      bg = palette.ui[scheme].fold,
-    },
-
-    DiagnosticError = {
-      fg = palette.diagnostics[scheme].diag_error,
-    },
-
-    DiagnosticWarn = {
-      fg = palette.diagnostics[scheme].diag_warn,
-    },
-
-    DiagnosticInfo = {
-      fg = palette.diagnostics[scheme].diag_info,
-    },
-
-    DiagnosticHint = {
-      fg = palette.diagnostics[scheme].diag_hint,
-    },
-    ["@comment"]    = { fg = palette.element[scheme].comment, italic = true },
-
-    ["@string"]     = { fg = palette.syntax[scheme].string },
-    ["@string.escape"] = { fg = palette.color[scheme].orange },
-
-    ["@number"]     = { fg = palette.syntax[scheme].number },
-    ["@boolean"]    = { fg = palette.syntax[scheme].boolean, bold = true },
-
-    ["@keyword"]    = { fg = palette.syntax[scheme].keyword, bold = true },
-
-    ["@function"]   = { fg = palette.syntax[scheme].Function },
-    ["@function.call"] = { fg = palette.syntax[scheme].Function },
-
-    ["@type"]       = { fg = palette.syntax[scheme].type },
-    ["@type.builtin"] = { fg = palette.color[scheme].cyan },
-
-    ["@variable"]   = { fg = palette.syntax[scheme].variable },
-    ["@constant"]   = { fg = palette.syntax[scheme].constant },
-
-    ["@operator"]   = { fg = palette.syntax[scheme].operator },
+    -- VertSplit = {
+    --   fg = palette.ui[scheme].split,
+    -- },
+    -- Folded = {
+    --   fg = palette.element[scheme].comment,
+    --   bg = palette.ui[scheme].fold,
+    -- },
+    -- DiagnosticError = {
+    --   fg = palette.diagnostics[scheme].diag_error,
+    -- },
+    -- DiagnosticWarn = {
+    --   fg = palette.diagnostics[scheme].diag_warn,
+    -- },
+    -- DiagnosticInfo = {
+    --   fg = palette.diagnostics[scheme].diag_info,
+    -- },
+    -- DiagnosticHint = {
+    --   fg = palette.diagnostics[scheme].diag_hint,
+    -- },
+    -- ["@comment"]    = { fg = palette.element[scheme].comment, italic = true },
+    -- ["@string"]     = { fg = palette.syntax[scheme].string },
+    -- ["@string.escape"] = { fg = palette.color[scheme].orange },
+    -- ["@number"]     = { fg = palette.syntax[scheme].number },
+    -- ["@boolean"]    = { fg = palette.syntax[scheme].boolean, bold = true },
+    -- ["@keyword"]    = { fg = palette.syntax[scheme].keyword, bold = true },
+    -- ["@function.call"] = { fg = palette.syntax[scheme].Function },
+    -- ["@variable"]   = { fg = palette.syntax[scheme].variable },
+    -- ["@operator"]   = { fg = palette.syntax[scheme].operator },
+    -- ["@module"]        = { fg = palette.color[scheme].cyan },
+    -- ["@namespace"]     = { fg = palette.color[scheme].cyan },
+    -- ["@type"]          = { fg = palette.syntax[scheme].type },
+    -- ["@type.builtin"]  = { fg = palette.color[scheme].bright_blue },
+    -- ["@function"]      = { fg = palette.syntax[scheme].Function },
+    -- ["@method"]        = { fg = palette.color[scheme].blue },
+    -- ["@parameter"]     = { fg = palette.color[scheme].orange },
+    -- ["@property"]      = { fg = palette.color[scheme].bright_cyan },
+    -- ["@field"]         = { fg = palette.color[scheme].bright_cyan },
+    -- ["@constant"]      = { fg = palette.syntax[scheme].constant },
+    -- ["@constant.builtin"] = { fg = palette.color[scheme].bright_magenta },
+    -- ["@variable"]      = { fg = palette.syntax[scheme].variable },
+    -- ["@keyword.import"] = { fg = palette.color[scheme].bright_red, bold = true },
   }
 end
 

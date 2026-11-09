@@ -4,9 +4,9 @@ local NoobColor = require('noobcolor')
 
 NoobDir.setup({})
 NoobTerm.setup({})
-NoobColor.setup('default')
 
 require('keymaps')
 require('options')
 require('config')
 
+NoobColor.setup('default')

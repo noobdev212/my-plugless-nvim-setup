@@ -35,3 +35,5 @@ vim.opt.signcolumn     = 'yes'
 vim.o.cmdheight        = 0
 vim.opt.termguicolors  = true
 vim.opt.clipboard      = 'unnamedplus'
+
+vim.cmd.colorscheme('wildcharm')
