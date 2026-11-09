@@ -50,8 +50,7 @@ NoobDir.open = function()
 end
 
 NoobDir.mapping = function()
-  local cwd = vim.fn.expand('%:p:h/')
-  local win = NoobDir.config.explorer.win_id
+  local _explorer = NoobDir.config.explorer
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern  = 'netrw',
@@ -59,13 +58,15 @@ NoobDir.mapping = function()
       NoobDir.read()
       --- replace netrw-% with keymap f
       vim.keymap.set('n', 'f', function() 
+        --- update current directory
+        local filepath = vim.b.netrw_curdir
         vim.ui.input(
           { prompt = 'Create new file: ' },
           function(input)
-            if vim.api.nvim_win_is_valid(win) then
-              vim.api.nvim_set_current_win(win)
+            if vim.api.nvim_win_is_valid(_explorer.win_id) then
+              vim.api.nvim_set_current_win(_explorer.win_id)
             end
-            vim.cmd('e ' .. vim.fn.fnameescape(cwd .. '/' .. input))
+            vim.cmd('e ' .. vim.fn.fnameescape(filepath .. '/' .. input))
           end
       )
       end, { noremap = true, buffer = true })
@@ -79,16 +80,17 @@ NoobDir.read = function()
     local filepath  = vim.fn['netrw#Call']('NetrwFile', vim.fn['netrw#Call']('NetrwGetWord'))
     local _explorer = NoobDir.config.explorer
     local status    = vim.uv.fs_stat(filepath)
+
     --- check if it exist
     if status then
       --- open filepath if a file into prev buffer
       --- otherwise open the directory
 
       if status.type == 'directory' then
-      	vim.print('Opening directory ' .. filepath)
       	vim.cmd('e ' .. filepath)
       else
       	vim.print('Opening file ' .. filepath)
+      	vim.print('Current directory ' .. vim.fn.expand('%:p:h'))
 
         if vim.api.nvim_win_is_valid(buf_id) then
           local escape_keys = vim.api.nvim_replace_termcodes('<C-w>w', true, false, true)
